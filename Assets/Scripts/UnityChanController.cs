@@ -19,6 +19,8 @@ public class UnityChanController : MonoBehaviour
         // ジャンプの速度（追加）
         float jumpVelocity = 20;
 
+        private float deadLine = -9;
+
         // Use this for initialization
         void Start ()
         {
@@ -40,6 +42,8 @@ public class UnityChanController : MonoBehaviour
                 bool isGround = (transform.position.y > this.groundLevel) ? false : true;
                 this.animator.SetBool ("isGround", isGround);
 
+                GetComponent<AudioSource>().volume = (isGround) ? 1:0;
+
                 // 着地状態でクリックされた場合（追加）
                 if (Input.GetMouseButtonDown (0) && isGround)
                 {
@@ -54,6 +58,11 @@ public class UnityChanController : MonoBehaviour
                         {
                                 this.rigid2D.velocity *= this.dump;
                         }
+                }
+                if(transform.position.x < this.deadLine)
+                {
+                    GameObject.Find("Canvas").GetComponent<UIController>().GameOver();
+                    Destroy(gameObject);
                 }
         }
 }
